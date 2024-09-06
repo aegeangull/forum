@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forum Registration</title>
+    <link rel="stylesheet" type="text/css" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="topnav">
+          <a class="float-left" href="/">Forum</a>
+          <a href="/signin">Login</a>
+          <a class="active" href="/signup">Register</a>
+        </div>
+      </header>
+      <main>
+        {{ if . }}
+        <div class="error-wrapper">
+          <span>{{ . }}</span>
+        </div>
+        {{end}}
+        <div class="register-form">
+          <span class="form-title">Register</span>
+          <form class="sign-up-form" action="/signup" method="POST">
+            <input
+              class="input-field"
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Your username"
+              required
+            /><br />
+            <input
+              class="input-field"
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Your password"
+              required
+            /><br />
+            <input
+              class="input-field"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Your e-mail"
+              required
+            /><br />
+            <input class="register-btn" type="submit" value="Register" /><br />
+            <div class="suggestion-link-wrapper">
+              <a href="/signin">Already a member?</a>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

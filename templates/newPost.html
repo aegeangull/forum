@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Post</title>
+
+    <!-- Update stylesheet URL to new version -->
+    <link rel="stylesheet" type="text/css" href="/assets/styles.css?v=2">
+    
+    <style>
+        /* Style for Choose File Input */
+        .custom-file-upload {
+           border: 1px solid #ccc;
+           display: inline-block;
+           padding: 6px 12px;
+           cursor: pointer;
+           border-radius: 4px;
+           background-color: #f5f5f5;
+        }
+        
+        .custom-file-upload:hover {
+            background-color: #e5e5e5;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <header>
+        <div class="topnav">
+            <a class="float-left" href="/">Forum</a>
+            {{if not .UserID}}
+                <a href="/signin">Login</a>
+                <a class="active" href="/signup">Register</a>
+            {{else}}
+                <a href="/signout">({{.UserName}}) Logout</a>
+            {{end}}
+        </div> 
+    </header>
+    
+    <main>
+        <form method="post" id="new-post-form" action="/newpost" enctype="multipart/form-data">
+            <div id="category-helper" class="error-wrapper" style="display: none;">
+                <span>You must select at least one category!</span>
+            </div>
+
+            <fieldset required>
+                <div class="checkbox-group">
+                    {{range $index, $category := .Cat}}
+                        <input class="category-checkbox" type="checkbox" id="{{$category.Category}}" name="CategoryName" value={{$category.Category}}>
+                        <label class="category-label" for="{{$category.Category}}">{{$category.Image}} {{$category.Category}}</label>
+                    {{end}} 
+                </div>
+            </fieldset>
+
+            <input type="text" class="input-field w-fill-available" placeholder="Post Title" name="postTitle" required></input><br>
+
+            <textarea class="w-fill-available" placeholder="Post Body" name="postBody" required></textarea><br>
+
+            <label for="file" class="custom-file-upload">
+                Choose File
+            </label>
+
+            <input type="file" name="file" id="file" style="display: none;"><br/>
+
+            <input type="submit" class="submit-button w-fill-available" value="Post">
+
+        </form>
+    </main>
+    
+    <script>
+        const form = document.getElementById("new-post-form");
+
+        form.addEventListener("submit", (e) => {
+            const checkboxes = Array.from(document.querySelectorAll(".category-checkbox"));
+
+            if (!checkboxes.reduce((acc, curr) => acc || curr.checked, false)) {
+                e.preventDefault();
+                document.getElementById("category-helper").style.display = "block";
+            }
+        });
+    </script>
+    
+</body>
+</html>

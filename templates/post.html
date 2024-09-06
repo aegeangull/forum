@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{.Post.Title}}</title>
+    <link rel="stylesheet" type="text/css" href="/assets/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="topnav">
+                <a class="float-left" href="/">Forum</a>
+                {{if not .UserID}}
+					<a href="/signin">Login</a>
+					<a href="/signup">Register</a>
+				{{else}}
+                    <a href="/signout">({{.UserName}}) Logout</a>
+				{{end}}
+            </div> 
+        </header>
+        <main>
+            <div class="post">
+                <h2>{{.Post.Title}}</h2>
+                {{range .Post.Categories}}
+                    <span>{{.Name}}</span>
+                {{end}}
+                {{if .limitedFile}}
+                <p>This image has been limited to {{.MaxSize}} bytes.</p>
+                {{end}} 
+                <p class="meta">Posted by <b>{{.Post.Author}}</b> on {{.Post.CreatedAt.Format "January 02, 2006 15:04"}}</p>
+                
+                <img src="/{{.FilePath}}" multiple="multiple" accept="image/jpeg, image/png, image/jpg, image/svg, image/webp" alt=""
+                width="200"
+                height="200">
+
+                <p>{{.Post.Body}}</p>
+                <form method="post" action="">
+                    <label for="Like">{{.Post.Likes}}</label>
+                    <input type="submit" name ="Like" value="like" class="like-button">
+                    <label for="Dislike">{{.Post.Dislikes}}</label>
+                    <input type="submit" name ="Dislike" value="dislike" class="dislike-button">
+                </form>
+            </div>
+            
+            <h3 id="comments-heading">Comments</h3>
+            <div class="comments">
+                {{range .Post.Comments}}
+                <div class="comment">
+                    <p class="meta">Comment by <b>{{ .Author}}</b> on {{.CreatedAt.Format "January 02, 2006 15:04"}}</p>
+                    <p>{{.Body}}</p>
+                    <form method="post" action="">
+                        <label for="Like">{{.Likes}}</label>
+                        <input type="hidden" name="CommentID" value="{{.ID}}">
+                        <input type="submit" name ="Like" value="like" class="like-button">
+                        <label for="Dislike">{{.Dislikes}}</label>
+                        <input type="submit" name ="Dislike" value="dislike" class="dislike-button">
+                    </form>
+                </div>
+                {{end}}
+            </div>
+            <h3 id="comments-heading">New comment</h3>
+            <div class="new-comment-form">
+                <form method="post" action="">
+                    <textarea name="comment" placeholder="Your comment" required></textarea><br>
+                    <input type="submit" class="submit-button" value="Submit">
+                </form>
+            </div>
+        </main>
+        <footer>
+            <p style="text-align: center;">&copy; 2023 Forum</p>
+        </footer>
+    </div>
+</body>
+</html>

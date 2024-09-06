@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Forum</title>
+    <link rel="stylesheet" type="text/css" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="topnav">
+          <a class="float-left active" href="/">Forum</a>
+          {{if not .UserID}}
+          <a href="/signin">Login</a>
+          <a href="/signup">Register</a>
+          {{else}}
+          <a href="/signout">({{.UserName}}) Logout</a>
+          {{end}}
+        </div>
+      </header>
+      <main>
+        {{if .UserID}}
+        <div class="categories">
+          <button class="btn-light category-btn" id="cat-all" data-category="">
+            All categories
+          </button>
+          {{range .Categories}}
+          <button
+            class="btn-light category-btn"
+            id="cat-{{.Name}}"
+            data-category="{{.Name}}"
+          >
+            {{.Name}}
+          </button>
+          {{end}}
+          <button class="filter-btn" data-type="my-posts">My posts</button>
+          <button class="filter-btn" data-type="liked-posts">
+            Liked posts
+          </button>
+        </div>
+        {{end}} {{if not .SelectedCategory}}
+        <h2 style="text-align: center; color: white">Latest posts</h2>
+        {{else}}
+        <h2 style="text-align: center; color: white">{{.SelectedCategory}}</h2>
+        {{end}}
+        <div class="new-post-wrapper">
+          <a class="btn-default" href="/newpost">New post</a>
+        </div>
+        <div class="posts">
+          {{range .Posts}}
+          <a
+            class="article-wrapper-link"
+            href="/post?id={{.ID}}"
+            style="text-decoration: none"
+          >
+            <article>
+              <div class="categories">
+                {{range .Categories}}
+                <span class="category">{{.Name}}</span>
+                {{end}}
+              </div>
+              <h3>{{.Title}}</h3>
+              <p>{{.Body}}</p>
+              <img
+                src="{{.Filepath}}"
+                multiple="multiple"
+                accept="image/jpeg, image/png, image/jpg, image/gif, image/svg, image/webp"
+                width="100"
+                height="100"
+                alt=""
+              />
+              <div class="meta">
+                <span class="author">by {{.Author}}</span>
+                <span class="date"
+                  >{{.CreatedAt.Format "January 02, 2006 15:04"}}</span
+                >
+              </div>
+              <div class="actions">
+                <span class="likes">{{.Likes}} likes</span>
+                <span class="dislikes">{{.Dislikes}} dislikes</span>
+                <span class="comment-link">Comments ({{ .CommentCount}})</span>
+              </div>
+            </article>
+          </a>
+          {{end}}
+        </div>
+        <script>
+          var buttons = document.querySelectorAll(".category-btn, .filter-btn");
+          for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", function (event) {
+              if (this.classList.contains("category-btn")) {
+                var category = this.dataset.category;
+                window.location.href = "/filter?category=" + category;
+              } else if (this.classList.contains("filter-btn")) {
+                var type = this.dataset.type;
+                window.location.href = "/?" + type + "=true";
+              }
+            });
+          }
+
+          parameterList = new URLSearchParams(window.location.search);
+          activeCat = parameterList.get("category");
+          activeCat = activeCat?.length > 0 ? activeCat : "all";
+
+          selectedCat = document.getElementById("cat-" + activeCat);
+          selectedCat.classList = "btn-default category-btn";
+        </script>
+      </main>
+      <footer>
+        <p style="text-align: center">&copy; 2023 Forum</p>
+      </footer>
+    </div>
+  </body>
+</html>
